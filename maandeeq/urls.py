@@ -11,6 +11,7 @@ urlpatterns = [
     path('customers/', include('customers.urls', namespace='customers')),
     # path('orders/', include('orders.urls', namespace='orders')),
     path('products/', include('products.urls', namespace='products')),
+    path('brands/', include('products.brand_urls', namespace='brands')),
 ]
 
 if settings.DEBUG:
