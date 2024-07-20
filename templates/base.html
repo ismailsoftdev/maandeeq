@@ -15,7 +15,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
 </head>
-<body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
 
   <!-- Preloader -->
@@ -120,14 +120,13 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="{% url 'dashboard:dashboard' %}" class="nav-link active">
+            <a href="{% url 'dashboard:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
               </p>
             </a>
           </li>
-          {% if request.user.user_type == 'admin'%}
           <li class="nav-item">
             <a href="" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
@@ -136,7 +135,15 @@
               </p>
             </a>
           </li>
-          {% endif %}
+
+          <li class="nav-item">
+            <a href="{% url "customers:customer_list" %}" class="nav-link {% if request.path|slice:'0:11' == '/customers/' %}active{% endif %}">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Customers
+              </p>
+            </a>
+          </li>
 
           <li class="nav-item">
             <a href="" class="nav-link">

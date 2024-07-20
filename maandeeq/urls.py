@@ -8,6 +8,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('dashboard.urls', namespace='dashboard')),
     path('accounts/', include('accounts.urls', namespace='accounts')),
+    path('customers/', include('customers.urls', namespace='customers')),
+    # path('orders/', include('orders.urls', namespace='orders')),
+    # path('products/', include('products.urls', namespace='products')),
 ]
 
 if settings.DEBUG:
