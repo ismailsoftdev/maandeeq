@@ -1,24 +1,28 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}Product List{% endblock title %}
 
 {% block content %}
+
+    <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Product List</h1>
-                </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Product List</li>
-                    </ol>
-                </div>
+        <div class="row mb-2">
+            <div class="col-sm-6">
+            <h1>Product List</h1>
             </div>
+            <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{% url "dashboard:dashboard" %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Product List</li>
+            </ol>
+            </div>
+        </div>
         </div><!-- /.container-fluid -->
     </section>
 
+
+    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -33,56 +37,64 @@
                     {% endif %}
                 </div>
             </div>
-            
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Product List</h3>
 
-                            <div class="card-tools">
-                                <a href="{% url 'products:product_create' %}" class="btn btn-primary">Create Product</a>
-                            </div>
+        <div class="row">
+            <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-6">
+                            <h3 class="card-title">Product List</h3>
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table-responsive p-0">
-                            <table class="table table-hover text-nowrap">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Brand</th>
-                                    <th>Price</th>
-                                    <th>Quantity</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for product in products %}
-                                    <tr>
-                                        <td>{{ product.id }}</td>
-                                        <td>{{ product.name }}</td>
-                                        <td>{{ product.brand.name }}</td>
-                                        <td>{{ product.price }}</td>
-                                        <td>{{ product.quantity }}</td>
-                                        <td>
-                                            <a href="{% url 'products:product_update' product.id %}" class="btn btn-primary">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </a>
-                                            <a href="{% url 'products:product_delete' product.id %}" class="btn btn-danger">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                        <div class="col-6">
+                            <a href="{% url 'products:product_create' %}" class="btn btn-primary float-right">Add Product</a>
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
                 </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Brand</th>
+                        <th>Price (USD)</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.brand }}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.quantity }}</td>
+                            <td>
+                                <a href="{% url 'products:product_update' product.id %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-1x fa-edit"></i>
+                                </a>
+                                <a href="{% url 'products:product_delete' product.id %}" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-1x fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                <!-- /.card-body -->
             </div>
+            <!-- /.card -->
+            </div>
+            <!-- /.col -->
         </div>
+        <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
     </section>
-{% endblock %}
+    <!-- /.content -->
+
+{% endblock content %}
