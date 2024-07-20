@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% endblock title %} - Maandeeq</title>
+  <title>{% block title %}{% endblock title %} - Maandeeq Group</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -83,9 +83,12 @@
           </a>
 
           <div class="dropdown-divider"></div>
-          <a href="{% url 'accounts:logout' %}" class="dropdown-item">
-            <i class="fas fa-sign-out-alt mr-2"></i> Logout
-          </a>
+          <form action="{% url 'accounts:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="dropdown-item">
+              <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </button>
+          </form>
         </div>
       </li>
     </ul>
@@ -96,7 +99,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{% url 'dashboard:dashboard' %}" class="brand-link">
-      <span class="brand-text font-weight-light">Maandeeq</span>
+      <span class="brand-text font-weight-light">Maandeeq Group</span>
     </a>
 
     <!-- Sidebar -->

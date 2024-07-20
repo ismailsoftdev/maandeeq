@@ -8,6 +8,7 @@ from django.contrib import messages
 
 class LoginPageView(LoginView):
     template_name = 'accounts/login.html'
+    redirect_authenticated_user = True
 
     def get_success_url(self):
         return reverse_lazy('dashboard:dashboard')
