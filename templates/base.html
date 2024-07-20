@@ -146,11 +146,10 @@
           </li>
 
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="{% url "products:product_list" %}" class="nav-link {% if request.path|slice:'0:10' == '/products/' %}active{% endif %}">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Products
-                <span class="right badge badge-danger">New</span>
               </p>
             </a>
           </li>
