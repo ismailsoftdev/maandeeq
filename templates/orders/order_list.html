@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% load static %}
+{% load static user_tags %}
 
 {% block title %}Orders List{% endblock title %}
 
@@ -59,6 +59,32 @@
         </div>
     </div>
 
+    {% if user|has_group:"Delivery" %}
+        <div class="modal fade" id="completeOrderModal" tabindex="-1" role="dialog" aria-labelledby="completeOrderModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="completeOrderModalLabel">Complete Order</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to complete this order?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <form action="{% url 'orders:complete_order' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" id="complete_order_id" value="">
+                            <button type="submit" class="btn btn-success">Proceed to Complete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -98,9 +124,11 @@
                                 <div class="col-6">
                                     <h3 class="card-title">Orders List</h3>
                                 </div>
+                                {% if user|has_group:"Sales" %}
                                 <div class="col-6">
                                     <a href="{% url 'orders:order_create' %}" class="btn btn-primary float-right">Create Order</a>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="card-body">
@@ -120,7 +148,19 @@
                                         <tr>
                                             <td>{{ forloop.counter }}</td>
                                             <td>{{ order.customer.name }}</td>
-                                            <td>{{ order.status|title }}</td>
+                                            <td>
+                                                {% if order.status == "Pending" %}
+                                                    <span class="badge badge-warning p-2">{{ order.status }}</span>
+                                                {% elif order.status == "Cancelled" %}
+                                                    <span class="badge badge-danger p-2">{{ order.status }}</span>
+                                                {% elif order.status == "In Progress" %}
+                                                    <span class="badge badge-primary p-2">{{ order.status }}</span>
+                                                {% elif order.status == "Completed" %}
+                                                    <span class="badge badge-success p-2">{{ order.status }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-info p-2">{{ order.status }}</span>
+                                                {% endif %}
+                                            </td>
                                             <td>${{ order.order_total }}</td>
                                             <td>{{ order.created_at.date }}</td>
                                             <td>
@@ -128,18 +168,29 @@
                                                     <i class="fas fa-eye"></i>
                                                 </a>
 
+                                                {% if user|has_group:"Sales" %}
                                                 <a href="{% url 'orders:order_delete' order.id %}" class="btn btn-danger">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
-                                                <!-- Process Order Button that will trigger modal -->
+
+
                                                 <button type="button" class="btn btn-success process-order" title="Process Order for Delivery" value="{{ order.id }}" data-toggle="modal" data-target="#processOrderModal">
                                                     <i class="fas fa-truck"></i>
                                                 </button>
 
-                                                <!-- Cancel Order Button that will trigger modal -->
-                                                <button type="button" class="btn btn-danger cancel-order" title="Cancel Order" value="{{ order.id }}" data-toggle="modal" data-target="#cancelOrderModal">
-                                                    <i class="fas fa-times"></i>
-                                                </button>
+                                                {% endif %}
+
+                                                {% if user|has_group:"Delivery" %}
+                                                    <button type="button" class="btn btn-success complete-order" title="Complete Order" value="{{ order.id }}" data-toggle="modal" data-target="#completeOrderModal">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                {% endif %}
+
+                                                {% if user|has_group:"Sales" or user|has_group:"Delivery" %}
+                                                    <button type="button" class="btn btn-danger cancel-order" title="Cancel Order" value="{{ order.id }}" data-toggle="modal" data-target="#cancelOrderModal">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -173,6 +224,11 @@
             $('.cancel-order').click(function() {
                 var order_id = $(this).val();
                 $('#cancel_order_id').val(order_id);
+            });
+
+            $('.complete-order').click(function() {
+                var order_id = $(this).val();
+                $('#complete_order_id').val(order_id);
             });
         });
     </script>

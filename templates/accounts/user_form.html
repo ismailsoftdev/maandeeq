@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}User Form{% endblock %}
+
+{% block css %}
+    <!-- Select2 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
+{% endblock css %}
+
+{% block content %}
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>User Form</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Home</a></li>
+                        <li class="breadcrumb-item active">User Form</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">User Form</h3>
+                        </div>
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    {% for field in form %}
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>{{ field.label }}</label>
+                                                {{ field }}
+                                            </div>
+                                        </div>
+                                        {% if forloop.counter|divisibleby:2 and not forloop.last %}
+                                            </div><div class="row">
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <a href="{% url 'users:user_list' %}" class="btn btn-secondary">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#id_groups').select2({
+                theme: 'bootstrap',
+                placeholder: 'Select Group',
+                multiple: false
+            });
+
+            var groupsFieldLabel = $('#id_groups').siblings('label');
+
+            groupsFieldLabel.text('Group');
+        });
+    </script>
+{% endblock %}

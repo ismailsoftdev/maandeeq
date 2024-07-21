@@ -1,33 +1,36 @@
 {% extends 'base.html' %}
 
-{% load user_tags %}
+{% block title %}Group List{% endblock %}
 
-{% block title %}Brand List{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap4.min.css">
+{% endblock css %}
 
 {% block content %}
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Brand List</h1>
+                    <h1>Group List</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Brand List</li>
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard:dashboard' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Group List</li>
                     </ol>
                 </div>
             </div>
         </div>
     </section>
+
     <section class="content">
         <div class="container-fluid">
-            
             <div class="row mb-2">
                 <div class="col-12">
                     {% if messages %}
                         {% for message in messages %}
-                            <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success {% else %} {{ message.tags }}{% endif %} alert-dismissible">
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% endif %} alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                 {{ message }}
                             </div>
@@ -35,54 +38,41 @@
                     {% endif %}
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Brand List</h3>
+                            <h3 class="card-title">Group List</h3>
                             <div class="card-tools">
-                                {% if request.user|has_group:"Admin" %}
-                                    <a href="{% url 'brands:brand_create' %}" class="btn btn-primary">Create Brand</a>
-                                {% endif %}
+                                <a href="{% url 'groups:group_create' %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus"></i> Add Group
+                                </a>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <table class="table table-bordered" id="table">
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover text-nowrap" id="table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
-                                        <th>Code</th>
-                                        <th>Created At</th>
-                                        <th>Updated At</th>
-                                        {% if request.user|has_group:"Admin" %}
-                                            <th>Action</th>
-                                        {% endif %}
+                                        <th>Users</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for brand in brands %}
+                                    {% for group in groups %}
                                         <tr>
                                             <td>{{ forloop.counter }}</td>
-                                            <td>{{ brand.name }}</td>
-                                            <td>{{ brand.code }}</td>
-                                            <td>{{ brand.created_at.date }}</td>
-                                            <td>{{ brand.updated_at.date }}</td>
-                                            {% if request.user|has_group:"Admin" %}
+                                            <td>{{ group.name }}</td>
+                                            <td>{{ group.user_count }}</td>
                                             <td>
-                                                <a href="{% url 'brands:brand_update' brand.pk %}" class="btn btn-primary btn-sm">
+                                                <a href="{% url 'groups:group_update' group.id %}" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="{% url 'brands:brand_delete' brand.pk %}" class="btn btn-danger btn-sm">
+                                                <a href="{% url 'groups:group_delete' group.id %}" class="btn btn-sm btn-danger">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
                                             </td>
-                                            {% endif %}
-                                        </tr>
-                                    {% empty %}
-                                        <tr>
-                                            <td colspan="7">No brands found.</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -93,4 +83,18 @@
             </div>
         </div>
     </section>
-{% endblock content %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.7/js/responsive.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#table').DataTable();
+        });
+    </script>
+
+{% endblock scripts %}
