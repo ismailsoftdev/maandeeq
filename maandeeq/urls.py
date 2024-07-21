@@ -3,6 +3,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# Change the admin title
+admin.site.site_header = 'Maandeeq'
+admin.site.site_title = 'Maandeeq'
+admin.site.index_title = 'Maandeeq Dashboard'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
