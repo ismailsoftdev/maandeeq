@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load user_tags %}
+
 {% block title %}Customer List{% endblock title %}
 
 {% block content %}
@@ -46,9 +48,11 @@
                         <div class="col-6">
                             <h3 class="card-title">Customer List</h3>
                         </div>
-                        <div class="col-6">
-                            <a href="{% url 'customers:customer_create' %}" class="btn btn-primary float-right">Add Customer</a>
-                        </div>
+                        {% if request.user|has_group:"Sales" %}
+                            <div class="col-6">
+                                <a href="{% url 'customers:customer_create' %}" class="btn btn-primary float-right">Add Customer</a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -62,7 +66,9 @@
                         <th>Type</th>
                         <th>District</th>
                         <th>Sub District</th>
-                        <th>Action</th>
+                        {% if request.user|has_group:"Sales" %}
+                            <th>Action</th>
+                        {% endif %}
                     </tr>
                     </thead>
                     <tbody>
@@ -71,17 +77,33 @@
                             <td>{{ forloop.counter }}</td>
                             <td>{{ customer.name }}</td>
                             <td>{{ customer.phone }}</td>
-                            <td>{{ customer.type|title }}</td>
+                            <td>
+                                {% if customer.type == "Individual" %}
+                                    <span class="badge badge-primary p-2">{{ customer.type }}</span>
+                                {% elif customer.type == "Business" %}
+                                    <span class="badge badge-success p-2">{{ customer.type }}</span>
+                                {% elif customer.type == "Government" %}
+                                    <span class="badge badge-danger p-2">{{ customer.type }}</span>
+                                {% elif customer.type == "Others" %}
+                                    <span class="badge badge-warning p-2">{{ customer.type }}</span>
+                                {% elif customer.type == "Corporate" %}
+                                    <span class="badge badge-info p-2">{{ customer.type }}</span>
+                                {% else %}
+                                    <span class="badge badge-secondary p-2">{{ customer.type }}</span>
+                                {% endif %}
+                            </td>
                             <td>{{ customer.district }}</td>
                             <td>{{ customer.subdistrict }}</td>
-                            <td>
-                                <a href="{% url 'customers:customer_update' customer.pk %}" class="btn btn-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="{% url 'customers:customer_delete' customer.pk %}" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </td>
+                            {% if request.user|has_group:"Sales" %}
+                                <td>
+                                    <a href="{% url 'customers:customer_update' customer.pk %}" class="btn btn-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'customers:customer_delete' customer.pk %}" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

@@ -109,8 +109,9 @@ class OrderListView(View):
     def get(self, request):
         if self.request.user.groups.filter(name='Delivery').exists():
             orders = Order.objects.filter(deliverable=True)
-        elif self.request.user.groups.filter(name='Manager').exists():
-            orders = Order.objects.all()
+        elif self.request.user.groups.filter(name='Admin').exists():
+            # Return all orders for admin and order by pending first, then In Progress and the last completed orders
+            orders = Order.objects.all().order_by('-status', '-created_at')
         else:
             orders = Order.objects.filter(status='Pending', created_by=self.request.user)
         return render(request, 'orders/order_list.html', {'orders': orders})
@@ -217,6 +218,20 @@ class CancelOrderView(LoginRequiredMixin, View):
             order.status = 'Cancelled'
             order.save()
             messages.success(request, f"Order for {order.customer.name} has been successfully cancelled.")
+            return redirect('orders:order_list')
+        except Order.DoesNotExist:
+            messages.error(request, "Order does not exist.")
+            return redirect('orders:order_list')
+
+class CompleteOrderView(LoginRequiredMixin, View):
+    def post(self, request):
+        pk = request.POST.get('order_id')
+        try:
+            order = Order.objects.get(id=pk)
+            order.status = 'Completed'
+            order.deliverable = False
+            order.save()
+            messages.success(request, f"Order for {order.customer.name} has been successfully completed.")
             return redirect('orders:order_list')
         except Order.DoesNotExist:
             messages.error(request, "Order does not exist.")
