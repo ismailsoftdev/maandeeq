@@ -3,7 +3,7 @@ from .models import Brand, Product
 
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description']
+    list_display = ['name', 'code', 'created_at']
 
 
 @admin.register(Product)
