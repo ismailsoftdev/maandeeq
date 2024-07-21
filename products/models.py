@@ -24,7 +24,8 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.product_number:
-            unique_id = f"{str(self.brand.code).zfill(6)}"
+            last_product = Product.objects.order_by('-id').first()
+            unique_id = f"{last_product.id + 1:06}{str(self.brand.code).zfill(6)}"
             self.product_number = unique_id
         super().save(*args, **kwargs)
 

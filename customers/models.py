@@ -3,12 +3,12 @@ from django.db import models
 
 class Customer(models.Model):
     CUSTOMER_TYPE_CHOICES = [
-        ('individual', 'Individual'),
-        ('corporate', 'Corporate'),
-        ('business', 'Business'),
-        ('government', 'Government'),
-        ('organization', 'Organization'),
-        ('other', 'Other'),
+        ('Individual', 'Individual'),
+        ('Corporate', 'Corporate'),
+        ('Business', 'Business'),
+        ('Government', 'Government'),
+        ('Organization', 'Organization'),
+        ('Other', 'Other'),
     ]
     name = models.CharField(max_length=100,)
     address = models.CharField(max_length=200, )
