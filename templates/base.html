@@ -17,6 +17,9 @@
 
   <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
   <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+
+  {% block css %}{% endblock css %}
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">
@@ -166,7 +169,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="{% url "orders:order_list" %}" class="nav-link {% if request.path|slice:'0:8' == '/orders/' %} active {% endif %}">
               <i class="nav-icon fas fa-copy"></i>
               <p>
                 Orders
@@ -236,6 +239,7 @@
 <script src="{% static 'plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
 <script src="{% static 'plugins/jszip/jszip.min.js' %}"></script>
 
+
 <script>
   $(function () {
     $("#table").DataTable({
@@ -243,6 +247,8 @@
     });
   });
 </script>
+
+{% block scripts %}{% endblock %}
 
 </body>
 </html>
