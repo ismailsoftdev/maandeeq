@@ -107,7 +107,12 @@ class OrderUpdateView(LoginRequiredMixin, UpdateView):
 
 class OrderListView(View):
     def get(self, request):
-        orders = Order.objects.all()
+        if self.request.user.groups.filter(name='Delivery').exists():
+            orders = Order.objects.filter(deliverable=True)
+        elif self.request.user.groups.filter(name='Manager').exists():
+            orders = Order.objects.all()
+        else:
+            orders = Order.objects.filter(status='Pending', created_by=self.request.user)
         return render(request, 'orders/order_list.html', {'orders': orders})
 
     def post(self, request):
@@ -166,6 +171,7 @@ class OrderItemUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
+        form.instance.price = form.instance.product.price
         messages.success(self.request, "Item has been updated successfully.")
         return super().form_valid(form)
 
@@ -187,3 +193,31 @@ class OrderItemDeleteView(LoginRequiredMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, "Item has been deleted successfully.")
         return super().form_valid(form)
+
+
+class ProcessOrderView(LoginRequiredMixin, View):
+    def post(self, request):
+        pk = request.POST.get('order_id')
+        try:
+            order = Order.objects.get(id=pk)
+            order.status = 'In Progress'
+            order.deliverable = True
+            order.save()
+            messages.success(request, f"Order for {order.customer.name} has been processed and ready to deliver.")
+            return redirect('orders:order_list')
+        except Order.DoesNotExist:
+            messages.error(request, "Order does not exist.")
+            return redirect('orders:order_list')
+
+class CancelOrderView(LoginRequiredMixin, View):
+    def post(self, request):
+        pk = request.POST.get('order_id')
+        try:
+            order = Order.objects.get(id=pk)
+            order.status = 'Cancelled'
+            order.save()
+            messages.success(request, f"Order for {order.customer.name} has been successfully cancelled.")
+            return redirect('orders:order_list')
+        except Order.DoesNotExist:
+            messages.error(request, "Order does not exist.")
+            return redirect('orders:order_list')

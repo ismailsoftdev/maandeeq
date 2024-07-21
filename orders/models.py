@@ -14,6 +14,7 @@ class Order(models.Model):
     ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    deliverable = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_orders')
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='updated_orders')
     created_at = models.DateTimeField(auto_now_add=True)
