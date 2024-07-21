@@ -16,10 +16,6 @@ class LoginPageView(LoginView):
     def form_invalid(self, form):
         messages.error(self.request, "Invalid username or password.")
         return super().form_invalid(form)
-    
-    def form_valid(self, form):
-        messages.success(self.request, "Login successful.")
-        return super().form_valid(form)
 
 class LogoutPageView(LoginRequiredMixin, LogoutView):
     next_page = reverse_lazy('accounts:login')
