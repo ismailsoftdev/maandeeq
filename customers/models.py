@@ -17,6 +17,8 @@ class Customer(models.Model):
     type = models.CharField(max_length=20, choices=CUSTOMER_TYPE_CHOICES, default='individual',)
     district = models.CharField(max_length=100, )
     subdistrict = models.CharField(max_length=100, )
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         verbose_name = 'Customer'
