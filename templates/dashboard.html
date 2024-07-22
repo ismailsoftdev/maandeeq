@@ -7,6 +7,7 @@
 {% block css %}
 
   <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" href="{% static 'plugins/chart.js/Chart.min.css' %}" />
 
 {% endblock css %}
 
@@ -237,6 +238,26 @@
 
         <!-- The Dashboard Cards -->
         {% if request.user|has_group:"Admin" %}
+          <!-- Sales Chart -->
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Sales Chart</h3>
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas id="salesChart" style="height: 400px; width: 100%;"></canvas>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+          
           <!-- Latest Orders -->
           <div class="row">
             <div class="col-12">
@@ -611,13 +632,42 @@
 {% endblock content %}
 
 {% block scripts %}
+  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
   <!-- Datatables  & Plugins -->
   <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
   <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
 
+  <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+
   <script>
     $(document).ready(function() {
       $('.table').DataTable();
+      {% if request.user|has_group:"Admin" %}
+        var ctx = document.getElementById('salesChart').getContext('2d');
+        var salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ sales_chart.labels|safe }},
+                datasets: [{
+                    label: 'Sales Per Month' + ' (' + {{ sales_chart.current_year }} + ')',
+                    data: {{ sales_chart.values|safe }},
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+
+                    x: {
+                        grid: {
+                            display: true
+                        }
+                    }
+                },
+            }
+        });
+      {% endif %}
     });
   </script>
-{% endblock scripts %}
+{% endblock %}
