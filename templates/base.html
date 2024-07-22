@@ -113,14 +113,14 @@
             </a>
           </li>
 
-          <li class="nav-item">
+          {% comment %} <li class="nav-item">
             <a href="{% url "groups:group_list" %}" class="nav-link {% if request.path|slice:'0:8' == '/groups/' %}active{% endif %}">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 Groups
               </p>
             </a>
-          </li>
+          </li> {% endcomment %}
           {% endif %}
 
           <li class="nav-item">
