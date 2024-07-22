@@ -216,6 +216,7 @@ class CancelOrderView(LoginRequiredMixin, View):
         try:
             order = Order.objects.get(id=pk)
             order.status = 'Cancelled'
+            order.deliverable = False
             order.save()
             messages.success(request, f"Order for {order.customer.name} has been successfully cancelled.")
             return redirect('orders:order_list')
