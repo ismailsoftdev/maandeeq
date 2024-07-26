@@ -290,6 +290,8 @@
                               <span class="badge badge-success">{{ order.status }}</span>
                             {% elif order.status == 'Cancelled' %}
                               <span class="badge badge-danger">{{ order.status }}</span>
+                            {% else %}
+                              <span class="badge badge-secondary">{{ order.status }}</span>
                             {% endif %}
                           </td>
                           <td>${{ order.order_total }}</td>
@@ -416,6 +418,8 @@
                                 <span class="badge badge-success">{{ order.status }}</span>
                               {% elif order.status == 'Cancelled' %}
                                 <span class="badge badge-danger">{{ order.status }}</span>
+                              {% else %}
+                                <span class="badge badge-secondary">{{ order.status }}</span>
                               {% endif %}
                             </td>
                             <td>${{ order.order_total }}</td>
@@ -554,6 +558,8 @@
                                 <span class="badge badge-success">{{ order.status }}</span>
                               {% elif order.status == 'Cancelled' %}
                                 <span class="badge badge-danger">{{ order.status }}</span>
+                              {% else %}
+                                <span class="badge badge-secondary">{{ order.status }}</span>
                               {% endif %}
                             </td>
                             <td>${{ order.order_total }}</td>
