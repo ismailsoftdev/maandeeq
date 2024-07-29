@@ -1,6 +1,6 @@
 from .base import *
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["maandeeq.onrender.com", "maandeeq.ismailsoftdev.com"]
 
 CSRF_TRUSTED_ORIGINS = ['https://maandeeq.ismailsoftdev.com', 'https://maandeeq.onrender.com']
 
