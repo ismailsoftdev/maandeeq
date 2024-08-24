@@ -4,10 +4,17 @@ ALLOWED_HOSTS = ["maandeeq.onrender.com", "maandeeq.ismailsoftdev.com"]
 
 CSRF_TRUSTED_ORIGINS = ['https://maandeeq.ismailsoftdev.com', 'https://maandeeq.onrender.com']
 
-DATABASES['default'] = dj_database_url.config(
-    conn_max_age=600,
-    default=config('DATABASE_URL')
-)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', cast=int),
+    }
+}
 
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
